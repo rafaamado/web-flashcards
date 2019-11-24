@@ -4,6 +4,7 @@ import {Switch, Route} from 'react-router-dom';
 import MyDecks from './MyDecks';
 import CardBrowser from './CardBrowser';
 import Sidebar from '../components/sidebar';
+import NewCard from './NewCard';
 
 const AppLayout = () => {
     return (
@@ -15,6 +16,7 @@ const AppLayout = () => {
                     <Route exact path='/app' component={MyDecks} />
                     <Route exact path='/app/decks' component={MyDecks} />
                     <Route exact path='/app/cards' component={CardBrowser} />
+                    <Route path='/app/decks/:deckId/newCard' component={NewCard} />
                 </Switch>
             </div>
         </>
