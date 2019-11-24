@@ -1,0 +1,36 @@
+.decks-header{
+    display: block;
+    background-color: #0095ff;
+    height: 40px;
+}
+
+.header-title{
+    position: relative;
+    color: #fff;
+    top: 10%;
+    left: 50%;
+    font-weight: bold;
+    font-size: 16pt;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.decks-list{
+    max-width: 900px;
+    margin: 20px auto 0;
+    padding: 0 20px;
+}
+.decks-list article{
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.4);
+}
+.decks-list article p{
+    font-size: 16px;
+    color: #999;
+    margin-top: 5px;
+    line-height: 24px;
+}

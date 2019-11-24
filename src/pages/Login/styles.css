@@ -1,0 +1,53 @@
+.login{
+    position: fixed;
+    background: url("../../assets/mountain-wp.jpg");
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.loginForm{
+    display: block;
+    margin: auto;
+    margin-top: 100px;
+    padding: 60px;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 30%;
+    height: 50%;
+    border-radius: 8px;
+}
+
+.loginForm input{
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin: 8px 0;
+    height: 40px;
+    border-radius: 4px;
+}
+
+
+.loginForm button {
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: large;
+    border-radius: 4px;
+}
+
+.login-btn{
+    margin-top: 30px;
+    background-color: #7670e4;
+
+}
+
+.signin-btn{
+    margin-top:20px;
+    background-color: #022463;
+}
+  
