@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch, Route, useParams, useRouteMatch} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 
 import MyDecks from './MyDecks';
 import CardBrowser from './CardBrowser';
