@@ -1,0 +1,67 @@
+.LearnCard{
+    display: block;
+    margin: auto;
+    margin-top: 75px;
+    text-align: center;
+    padding: 5px 50px 10px 50px;
+    height: 100%;
+}
+
+.btn-show{
+    margin:auto;
+    margin-top: 30px;
+}
+
+.sound-icon{
+    margin-right: 20px;
+}
+
+.front-card{
+    font-size: 18pt;
+}
+
+.back-card{
+    font-size: 18pt;
+}
+
+.btn-show {
+    color: white;
+    background-color: #7670e4;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 75%;
+    font-size: large;
+    border-radius: 4px;
+}
+
+.btn-ans{
+    position: absolute;
+    bottom: 10px;
+}
+
+.btns-ans span{
+    padding: 2px 30px;
+    display: inline-block;
+    margin: 20px 5%;
+    color: #fff;
+    border-radius: 10px;
+}
+.nxt-review{
+    font-size: 10pt;
+}
+
+.wrong{
+    background-color: rgb(250, 62, 100);
+}
+.hard{
+    background-color: dimgrey;
+}
+
+.good{
+    background-color: mediumslateblue;
+}
+
+.easy{
+    background-color: chartreuse;
+}

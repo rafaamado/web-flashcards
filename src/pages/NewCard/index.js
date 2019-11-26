@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles.css'
+import { Link } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import { TiCancel } from 'react-icons/ti';
 import {IoMdImages} from 'react-icons/io';
@@ -7,7 +8,7 @@ import {IoMdImages} from 'react-icons/io';
 const NewCard = (props) => {
 
     console.log(props);
-    const deckId = props.match.params.deckId;
+    //const deckId = props.match.params.deckId;
 
     const iconStyle = {
         display: 'block',
@@ -32,7 +33,7 @@ const NewCard = (props) => {
                 <label>Back</label><hr/>
                 <textarea id='area-back' name='back' rows='3' />
                 <IoMdImages size={30} style={iconStyle}/><br/>
-                <button className='btn-cancel' onClick={() => alert('can')}>Cancel <TiCancel/></button>
+                <Link to='/app/decks' ><button className='btn-cancel'>Cancel <TiCancel/></button></Link>
                 <button className='btn-create' onClick={handleCreate}>Create <MdAdd/></button>
             </form>
         </div>
