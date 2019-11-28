@@ -21,6 +21,7 @@ export default class LearnCard extends React.Component{
         }],
         idxCurCard: 0,
         displayAnswer: 'none',
+        userAnswer: ''
     }
     componentDidMount(){
         console.log(this.props.match.params.deckId);
@@ -40,19 +41,27 @@ export default class LearnCard extends React.Component{
     handleHard = () => {
         this.nextCard();
     }
-    handleGood= () =>{
+    handleGood = () =>{
         this.nextCard();
     }
-    handleEasy= () => {
+    handleEasy = () => {
         this.nextCard();
     }
 
-    nextCard= (removefromList=true) => {
+    nextCard= (removefromList=true ) => {
         const {cardsList, idxCurCard} = this.state;
         if (removefromList) 
             cardsList.splice(idxCurCard, 1);
         const randomCard = Math.floor(Math.random() * cardsList.length);
-        this.setState({displayAnswer: 'none', idxCurCard: randomCard, cardsList});
+        this.setState({displayAnswer: 'none', idxCurCard: randomCard, cardsList, userAnswer: ''});
+    }
+
+    handleUserInput = () => {
+        const userTxt =  prompt("Type your answer:");
+        if (userTxt === null) 
+            return;
+
+        this.setState({displayAnswer: 'block', userAnswer: userTxt});
     }
 
 
@@ -80,10 +89,11 @@ export default class LearnCard extends React.Component{
                 {frontCard.map( (detail, index) => (
                     index === 0 ? null : <p key={index}><AiFillSound className='sound-icon'/>{detail}</p>
                 ))}
-                <MdKeyboard size={40}/> 
+                <MdKeyboard size={40} onClick={this.handleUserInput} /> 
             </div>
             <div className='back-card' style={{display: displayAnswer}}>
                 <hr/>
+                {this.renderUserAnswer(card)}
                 <p><strong><AiFillSound className='sound-icon'/>{backCard[0]}</strong></p>
                 {backCard.map( (detail, index) => (
                     index === 0 ? null : <p key={index}><AiFillSound className='sound-icon'/>{detail}</p>
@@ -110,8 +120,27 @@ export default class LearnCard extends React.Component{
                     <p className='nxt-review'>({card.easy} days)</p> 
                 </span>
             </div>
+
         </div>
         ); 
+    }
+
+    renderUserAnswer(card){
+        const {userAnswer} = this.state;
+        if(userAnswer === "") 
+            return <></>;
+    
+        let usrAnwArray = [];
+        //for each letter in card answer
+        for (let i=0; i< userAnswer.length; i++){
+
+            if (userAnswer.charAt(i) === card.back.charAt(i)){
+                usrAnwArray.push(<span style={{color: 'green'}}>{userAnswer.charAt(i)}</span> )
+            } else{
+                usrAnwArray.push(<span style={{color: 'red'}}>{userAnswer.charAt(i)}</span> )
+            }
+        }
+        return  <p><strong>{usrAnwArray.map( (letter) => letter )}</strong></p>;
     }
 
     renderFininished(){

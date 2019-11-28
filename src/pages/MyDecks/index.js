@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './styles.css';
 import Sidebar from '../../components/sidebar';
-import { IoIosAddCircle } from "react-icons/io";
-
+import { IoIosAddCircle } from 'react-icons/io';
+import { MdDelete } from 'react-icons/md';
 
 export default class MyDecks extends React.Component{
 
@@ -12,15 +12,19 @@ export default class MyDecks extends React.Component{
         inputDeckName: '',
         inputDeckDescription: '',
         decks: [
-            {
+            {   
+                id: 1,
                 name: 'Deck1',
                 description: 'teste',
-                cardsCount: 50
+                cardsCount: 50,
+                cardsToStudy: 10,
             },
             {
+                id: 2,
                 name: 'Deck2',
                 description: 'teste',
-                cardsCount: 50
+                cardsCount: 30,
+                cardsToStudy: 5,
             }
         ]
     }
@@ -44,6 +48,12 @@ export default class MyDecks extends React.Component{
         inDeckName.value='';
         inDeckDesc.value='';
         this.handleCloseModal();
+    }
+
+    handleDeleteDeck = (deck) => {
+        const {decks} = this.state;
+        decks.splice( decks.indexOf(deck) ,1);
+        this.setState({decks});
     }
 
     render(){
@@ -82,7 +92,7 @@ export default class MyDecks extends React.Component{
                         </div>
                     </div>
                 </div>
-                <IoIosAddCircle size={75} color="#0095ff" style={addBtnStyle} onClick={this.handleAddBtn}/>
+                <IoIosAddCircle size={75} color="#246fc5" style={addBtnStyle} onClick={this.handleAddBtn}/>
             </div>
         );
     }
@@ -91,14 +101,22 @@ export default class MyDecks extends React.Component{
         const {decks} = this.state;
 
         return(
-            decks.map( (deck, index) => (
-                <article key={index}>
-                    <strong>{deck.name}</strong>
-                    <p>{deck.description}</p>
-                    <p>{deck.cardsCount}</p>
-                    <Link to={`/app/decks/${deck.name}/newCard`}>
-                        <IoIosAddCircle className="btnAddCard"size={30} color="#0095ff" />
+            decks.map( (deck) => (
+                <article key={deck.id}>
+                    <div className='deck-count vertical-center'>
+                        <p>{deck.cardsToStudy}</p>
+                    </div>
+                    <div className='deck-info vertical-center'>
+                        <strong>{deck.name}</strong>
+                        <p className='deck-desc'>{deck.cardsCount} cards</p>
+                    </div>
+                    <Link className='study' to={`/app/decks/${deck.id}/learn`}>Study</Link>
+                    <Link className='add' to={`/app/decks/${deck.id}/newCard`}>
+                        <IoIosAddCircle className="btnAddCard" size={50} color="#246fc5" />
                     </Link>
+                    <a className='delete' onClick={() => this.handleDeleteDeck(deck)}>
+                        <MdDelete size={50} color="#dd0000" />
+                    </a>
                 </article>
             ))
         );
