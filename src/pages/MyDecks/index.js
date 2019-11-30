@@ -114,9 +114,9 @@ export default class MyDecks extends React.Component{
                     <Link className='add' to={`/app/decks/${deck.id}/newCard`}>
                         <IoIosAddCircle className="btnAddCard" size={50} color="#246fc5" />
                     </Link>
-                    <a className='delete' onClick={() => this.handleDeleteDeck(deck)}>
+                    <Link className='delete' onClick={() => this.handleDeleteDeck(deck)}>
                         <MdDelete size={50} color="#dd0000" />
-                    </a>
+                    </Link>
                 </article>
             ))
         );
