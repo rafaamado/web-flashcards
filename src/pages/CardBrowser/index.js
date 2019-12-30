@@ -1,39 +1,26 @@
 import React from 'react';
 import './styles.css';
+import api from '../../services/api';
 
 export default class CardBrowser extends React.Component{
 
     state = {
         searchInput: '',
-        decks: [
-            {
-                id: 1,
-                name: 'Deck1',
-                cards:[
-                    {
-                        front: 'a stupid or careless mistake\nerro, mancada',
-                        back: 'blunder\nto make a terrible blunder',
-                    },
-                    {
-                        front: 'walk in a specific way',
-                        back: 'to tread, trod, trodden',
+        cards: []
+    }
 
-                    }]
-            },
-            {
-                id: 2,
-                name: 'Deck2',
-                cards:[
-                    {
-                        front: 'palavra 1',
-                        back: 'palavra 2',
-                    },
-                    {
-                        front: 'palavra 2',
-                        back: 'palavra 2',
-                    }]
-            }
-        ]
+    componentDidMount(){
+        this.loadCards();
+    }
+
+    loadCards= async () =>{
+        try{
+            const response = await api.get('/cards');
+            this.setState({cards : response.data});
+        }catch(err){
+            console.log(err);
+            alert('Unable to load cards');
+        }
     }
 
     handleSearch = (event) => {
@@ -66,7 +53,7 @@ export default class CardBrowser extends React.Component{
 
     renderCards(){
 
-        let { decks, searchInput } = this.state;
+        let { cards, searchInput } = this.state;
 
         const search = searchInput.toLocaleLowerCase();
 
@@ -76,15 +63,13 @@ export default class CardBrowser extends React.Component{
         } 
 
         return (
-            decks.map((deck, idxDeck) => (
-                    deck.cards.filter(cardFilter).map((card, idxCard) => (
-                        <tr key={idxCard}>
-                            <td>{deck.name}</td>
-                            <td>{card.front}</td>
-                            <td>{card.back}</td>
-                        </tr>
-                    ))
-                ))
+            cards.filter(cardFilter).map( (card, idxCard) => (
+                <tr key={idxCard}>
+                    <td>{card.deck.name}</td>
+                    <td>{card.front}</td>
+                    <td>{card.back}</td>
+                </tr>
+            ))
         );
     }
 

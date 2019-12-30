@@ -4,6 +4,7 @@ import './styles.css';
 import Sidebar from '../../components/sidebar';
 import { IoIosAddCircle } from 'react-icons/io';
 import { MdDelete } from 'react-icons/md';
+import api from "../../services/api";
 
 export default class MyDecks extends React.Component{
 
@@ -11,23 +12,21 @@ export default class MyDecks extends React.Component{
         modalDisplay: 'none',
         inputDeckName: '',
         inputDeckDescription: '',
-        decks: [
-            {   
-                id: 1,
-                name: 'Deck1',
-                description: 'teste',
-                cardsCount: 50,
-                cardsToStudy: 10,
-            },
-            {
-                id: 2,
-                name: 'Deck2',
-                description: 'teste',
-                cardsCount: 30,
-                cardsToStudy: 5,
-            }
-        ]
+        decks: []
     }
+
+    componentDidMount(){
+        this.loadDecks();
+    }
+    loadDecks= async () =>{
+        try{
+            const response = await api.get('/deck/mydecks');
+            this.setState({decks : response.data});
+        }catch(err){
+            console.log('Failed to retrieve user decks: ',err);
+        }
+    }
+    
     handleAddBtn = () => {
         this.setState({modalDisplay: 'block'});
     }
@@ -36,24 +35,48 @@ export default class MyDecks extends React.Component{
         this.setState({modalDisplay: 'none'});
     }
 
-    handleCreateDeck = () => {
+    handleCreateDeck = async () => {
+        // testing other way of get values from inputs
         const inDeckName = document.getElementById('inDeckName');
         const inDeckDesc = document.getElementById('inDeckDesc');
-        const deck = {name: inDeckName.value,  description: inDeckDesc.value, cardsCount: 0};
+        let deck = {
+            name: inDeckName.value,
+            description: inDeckDesc.value
+        };
 
-        const {decks} = this.state;
-        decks.push(deck);
-        this.setState({decks: decks})
+        try{
+            const response = await api.post('/deck', deck);
 
-        inDeckName.value='';
-        inDeckDesc.value='';
-        this.handleCloseModal();
+            const {decks} = this.state;
+            response.data.totalCards = 0;        
+            response.data.cardsToStudy = 0;
+            
+            decks.push(response.data);
+            this.setState({decks: decks});
+
+            inDeckName.value='';
+            inDeckDesc.value='';
+            this.handleCloseModal();
+        }catch(err){
+            console.log(err);
+            alert('Failed to create deck');
+        }
     }
 
-    handleDeleteDeck = (deck) => {
+    handleDeleteDeck = async (deck) => {
         const {decks} = this.state;
-        decks.splice( decks.indexOf(deck) ,1);
-        this.setState({decks});
+        try{
+            const confir = window.confirm("Are you sure you want to delete this deck? All the cards from this decks are gonna be deleted!");
+            if (confir === true){
+                await api.delete(`/deck/${deck._id}`);
+                decks.splice( decks.indexOf(deck) ,1);
+                this.setState({decks});
+            }
+        }catch(err){
+            console.log(err);
+            alert('Failed to delete deck.');
+        }
+
     }
 
     render(){
@@ -102,16 +125,16 @@ export default class MyDecks extends React.Component{
 
         return(
             decks.map( (deck) => (
-                <article key={deck.id}>
+                <article key={deck._id}>
                     <div className='deck-count vertical-center'>
                         <p>{deck.cardsToStudy}</p>
                     </div>
                     <div className='deck-info vertical-center'>
                         <strong>{deck.name}</strong>
-                        <p className='deck-desc'>{deck.cardsCount} cards</p>
+                        <p className='deck-desc'>{deck.totalCards} cards</p>
                     </div>
-                    <Link className='study' to={`/app/decks/${deck.id}/learn`}>Study</Link>
-                    <Link className='add' to={`/app/decks/${deck.id}/newCard`}>
+                    <Link className='study' to={`/app/decks/${deck._id}/learn`}>Study</Link>
+                    <Link className='add' to={`/app/decks/${deck._id}/newCard`}>
                         <IoIosAddCircle className="btnAddCard" size={50} color="#246fc5" />
                     </Link>
                     <Link to={'#'} className='delete' onClick={() => this.handleDeleteDeck(deck)}>

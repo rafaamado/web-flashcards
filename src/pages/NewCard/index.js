@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles.css'
 import { Link } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import { TiCancel } from 'react-icons/ti';
 import {IoMdImages} from 'react-icons/io';
+import api from '../../services/api';
 
 const NewCard = (props) => {
 
-    console.log(props);
-    //const deckId = props.match.params.deckId;
+    const deckId = props.match.params.deckId;
+    const [frontTxt, setFrontTxt] = useState('');
+    const [backTxt, setBackTxt] = useState('');
 
     const iconStyle = {
         display: 'block',
@@ -16,10 +18,16 @@ const NewCard = (props) => {
         size: 60 // does not work,
     };
 
-    const handleCreate = (event) => {
+    async function handleCreate (event){
         event.preventDefault();
-        document.getElementById('area-front').value = '';
-        document.getElementById('area-back').value = '';
+        try{
+            await api.post(`/deck/${deckId}/card`, {front: frontTxt, back: backTxt});
+        }catch(err){
+            console.log(err);
+            alert('Failed to create card');
+        }
+        setFrontTxt('');
+        setBackTxt('');
     };
 
 
@@ -28,10 +36,14 @@ const NewCard = (props) => {
             <h3>Deck: {props.match.params.deckId}</h3>
             <form> 
                 <label>Front</label><hr/>
-                <textarea id='area-front' name='front' rows='3'/>
+                <textarea id='area-front' name='front' rows='3' 
+                    value={frontTxt} 
+                    onChange={e => setFrontTxt(e.target.value)} />
                 <IoMdImages size={30} style={iconStyle}/> <br/>
                 <label>Back</label><hr/>
-                <textarea id='area-back' name='back' rows='3' />
+                <textarea id='area-back' name='back' rows='3' 
+                    value={backTxt}
+                    onChange={e => setBackTxt(e.target.value)} />
                 <IoMdImages size={30} style={iconStyle}/><br/>
                 <Link to='/app/decks' ><button className='btn-cancel'>Cancel <TiCancel/></button></Link>
                 <button className='btn-create' onClick={handleCreate}>Create <MdAdd/></button>
