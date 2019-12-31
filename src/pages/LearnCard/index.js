@@ -2,55 +2,76 @@ import React from 'react';
 import './styles.css';
 import { MdKeyboard } from 'react-icons/md';
 import { AiFillSound } from 'react-icons/ai';
+import api from '../../services/api';
 
 export default class LearnCard extends React.Component{
     state={
-        cardsList: [{
-            front: 'a stupid or careless mistake\nerro, mancada',
-            back: 'blunder\nto make a terrible blunder',
-            hard: 2,
-            good: 5,
-            easy: 9,
-        },
-        {
-            front: 'walk in a specific way',
-            back: 'to tread, trod, trodden',
-            hard: 2,
-            good: 5,
-            easy: 9,
-        }],
+        cards: [],
         idxCurCard: 0,
         displayAnswer: 'none',
         userAnswer: ''
     }
     componentDidMount(){
-        console.log(this.props.match.params.deckId);
+        this.loadCards();
 
-        const randomCard = Math.floor(Math.random() * this.state.cardsList.length);
+        const randomCard = Math.floor(Math.random() * this.state.cards.length);
         this.setState({idxCurCard: randomCard});
+    }
+
+    loadCards = async () => {
+        try{
+            const deckId = this.props.match.params.deckId;
+            const response = await api.get(`/deck/${deckId}/learn`);
+
+            this.setState({cards : response.data});
+        }catch(err){
+            console.log(err);
+            //alert('Failed to load cards from deck!');
+        }
     }
 
     handleShowAnswer= () => {
         this.setState({displayAnswer: 'block'});
     }
 
+    saveCardProgress= async (answer) => {
+        try{
+            const deckId = this.props.match.params.deckId;
+            const {cards, idxCurCard} = this.state;
+            const card = cards[idxCurCard];
 
-    handleWrong = () => {
+            console.log(JSON.stringify({answer, card}));
+            const response = await api.put(`/deck/${deckId}/card/${card._id}/learn`, {answer, card});
+            console.log(response.data);
+            cards[idxCurCard] = response.data;
+            this.setState({cards: cards});
+
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+    
+    handleWrong = async () => {
+        await this.saveCardProgress('WRONG');
         this.nextCard(false);
     }
-    handleHard = () => {
+    handleHard = async () => {
+        await this.saveCardProgress('HARD');
         this.nextCard();
     }
-    handleGood = () =>{
+    handleGood = async() =>{
+        await this.saveCardProgress('GOOD');
         this.nextCard();
     }
-    handleEasy = () => {
+    handleEasy = async () => {
+        await this.saveCardProgress('EASY');
         this.nextCard();
     }
 
-    nextCard= (removefromList=true ) => {
-        const {cardsList, idxCurCard} = this.state;
-        if (removefromList) 
+    nextCard= (remove = true) => {
+        const {cards: cardsList, idxCurCard} = this.state;
+        if (remove) 
             cardsList.splice(idxCurCard, 1);
         const randomCard = Math.floor(Math.random() * cardsList.length);
         this.setState({displayAnswer: 'none', idxCurCard: randomCard, cardsList, userAnswer: ''});
@@ -66,7 +87,7 @@ export default class LearnCard extends React.Component{
 
 
     render(){
-        const {cardsList, idxCurCard} = this.state;
+        const {cards: cardsList, idxCurCard} = this.state;
         var card;
         if (cardsList.length > 0) card = cardsList[idxCurCard];
 
@@ -109,15 +130,15 @@ export default class LearnCard extends React.Component{
                 </span>
                 <span className='hard' onClick={this.handleHard}>
                     <p className='answer'>Hard</p>
-                    <p className='nxt-review'>({card.hard} days)</p> 
+                    <p className='nxt-review'>({card.progress.HARD} days)</p> 
                 </span>
                 <span className='good' onClick={this.handleGood}>
                     <p className='answer'>Good</p>
-                    <p className='nxt-review'>({card.good} days)</p> 
+                    <p className='nxt-review'>({card.progress.GOOD} days)</p> 
                 </span>
                 <span className='easy' onClick={this.handleEasy}>
                     <p className='answer'>Easy</p>
-                    <p className='nxt-review'>({card.easy} days)</p> 
+                    <p className='nxt-review'>({card.progress.EASY} days)</p> 
                 </span>
             </div>
 
