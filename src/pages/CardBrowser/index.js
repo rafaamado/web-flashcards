@@ -58,13 +58,13 @@ export default class CardBrowser extends React.Component{
         const search = searchInput.toLocaleLowerCase();
 
         const cardFilter = (card) => {
-            const line = card.front.concat(card.back) 
+            const line = card.front.concat(card.back).concat(card.deck.name); 
             return line.indexOf(search) >= 0;
         } 
 
         return (
             cards.filter(cardFilter).map( (card, idxCard) => (
-                <tr key={idxCard}>
+                <tr key={idxCard} onClick={ e => this.props.history.push(`/app/card/${card._id}`)}>
                     <td>{card.deck.name}</td>
                     <td>{card.front}</td>
                     <td>{card.back}</td>

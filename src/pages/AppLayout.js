@@ -5,6 +5,7 @@ import MyDecks from './MyDecks';
 import CardBrowser from './CardBrowser';
 import Sidebar from '../components/sidebar';
 import NewCard from './NewCard';
+import EditCard from './EditCard';
 import LearnCard from './LearnCard';
 
 const AppLayout = () => {
@@ -18,6 +19,7 @@ const AppLayout = () => {
                     <Route exact path='/app/decks' component={MyDecks} />
                     <Route exact path='/app/cards' component={CardBrowser} />
                     <Route path='/app/decks/:deckId/newCard' component={NewCard} />
+                    <Route path='/app/card/:cardId' component={EditCard} />
                     <Route path='/app/decks/:deckId/learn' component={LearnCard} />
                 </Switch>
             </div>
