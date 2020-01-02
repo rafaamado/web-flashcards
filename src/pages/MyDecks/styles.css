@@ -79,13 +79,14 @@
 
 .deck-count{
   display: inline-block;
-  margin-right: 40px;
+  margin-right: 50px;
 }
 .deck-count p{
   display: inline-block;
   font-size: 22pt;
   background-color: #ddd;
   font-weight: bold;
+  padding: 5px 12px;
 }
 
 

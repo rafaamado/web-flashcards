@@ -77,4 +77,10 @@ form button {
     margin-top:20px;
     background-color: #022463;
 }
+
+.error-message{
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 1%;
+}
   

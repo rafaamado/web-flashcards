@@ -40,9 +40,10 @@ export default class LearnCard extends React.Component{
             const {cards, idxCurCard} = this.state;
             const card = cards[idxCurCard];
 
-            console.log(JSON.stringify({answer, card}));
+            //console.log(JSON.stringify({answer, card}));
             const response = await api.put(`/deck/${deckId}/card/${card._id}/learn`, {answer, card});
             console.log(response.data);
+
             cards[idxCurCard] = response.data;
             this.setState({cards: cards});
 
@@ -70,11 +71,12 @@ export default class LearnCard extends React.Component{
     }
 
     nextCard= (remove = true) => {
-        const {cards: cardsList, idxCurCard} = this.state;
+        const {cards, idxCurCard} = this.state;
         if (remove) 
-            cardsList.splice(idxCurCard, 1);
-        const randomCard = Math.floor(Math.random() * cardsList.length);
-        this.setState({displayAnswer: 'none', idxCurCard: randomCard, cardsList, userAnswer: ''});
+            cards.splice(idxCurCard, 1);
+
+        const randomCard = Math.floor(Math.random() * cards.length);
+        this.setState({displayAnswer: 'none', idxCurCard: randomCard, cards, userAnswer: ''});
     }
 
     handleUserInput = () => {
@@ -87,13 +89,13 @@ export default class LearnCard extends React.Component{
 
 
     render(){
-        const {cards: cardsList, idxCurCard} = this.state;
-        var card;
-        if (cardsList.length > 0) card = cardsList[idxCurCard];
+        const {cards, idxCurCard} = this.state;
+        let card;
+        if (cards.length > 0) card = cards[idxCurCard];
 
         return (
         <div className='LearnCard'>
-            { cardsList.length > 0 ? this.renderCard(card) : this.renderFininished()}
+            { cards.length > 0 ? this.renderCard(card) : this.renderFininished()}
         </div>
         );
     }

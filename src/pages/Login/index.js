@@ -2,6 +2,7 @@ import React from 'react';
 import './styles.css';
 import api from "../../services/api";
 import { login } from "../../services/auth";
+import { MdErrorOutline } from 'react-icons/md';
 
 export default class Login extends React.Component{
 
@@ -12,7 +13,7 @@ export default class Login extends React.Component{
         signupName: '',
         singupEmail: '',
         singupPassword: '',
-        error: '' 
+        singinError: ''
     }
 
     handleSignIn = async (event) => {
@@ -26,10 +27,10 @@ export default class Login extends React.Component{
                 login(response.data.acessToken);
                 this.props.history.push("/app");
             } catch (err) {
-                console.log(err)
-                this.setState({
-                    error: "Unable to singin, check your credentials"
-                });
+                //console.log(err.response)
+                if (err.response.status === 400) {
+                    this.setState({ singinError: err.response.data.error });
+                }
             }
         }
     };
@@ -72,6 +73,9 @@ export default class Login extends React.Component{
     renderSignIn(){
         return (
         <form>
+            <p className='error-message' style={{display: (this.state.singinError.length > 0 ? 'block' : 'none')}}>
+                <MdErrorOutline/> {this.state.singinError}
+            </p>
             <label><b>Email</b> </label>
             <input 
                 type="text" 
@@ -94,7 +98,7 @@ export default class Login extends React.Component{
     renderSingUp(){
         return (
         <form>
-            <label><b>Nome</b> </label>
+            <label><b>Name</b> </label>
             <input 
                 type="text" 
                 name="name" 
