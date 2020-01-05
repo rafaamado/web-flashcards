@@ -2,7 +2,7 @@
 .EditCard form{
     display: block;
     margin: auto;
-    margin-top: 5px;
+    margin-top: 80px;
     padding: 30px;
     background-color: rgba(255, 255, 255, 0.9);
     width: 80%;
@@ -37,7 +37,7 @@
 }
 
 
-.EditCard button {
+.EditCard form button {
     display: inline-block;
     color: white;
     padding: 14px 20px;
@@ -57,4 +57,18 @@
 
 .btn-create{
     float:right;
+}
+
+.btn-delete{
+    display: inline-flex;
+    align-items: center;
+    background-color: rgb(255, 30, 98); /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 12px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    position: absolute;
+    top: 5%;
+    right: 10%;
 }

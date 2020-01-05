@@ -7,6 +7,7 @@ import api from '../../services/api';
 export default class LearnCard extends React.Component{
     state={
         cards: [],
+        totalCards: 0,
         idxCurCard: 0,
         displayAnswer: 'none',
         userAnswer: ''
@@ -23,7 +24,7 @@ export default class LearnCard extends React.Component{
             const deckId = this.props.match.params.deckId;
             const response = await api.get(`/deck/${deckId}/learn`);
 
-            this.setState({cards : response.data});
+            this.setState({cards : response.data, totalCards: response.data.length});
         }catch(err){
             console.log(err);
             //alert('Failed to load cards from deck!');
@@ -42,7 +43,7 @@ export default class LearnCard extends React.Component{
 
             //console.log(JSON.stringify({answer, card}));
             const response = await api.put(`/deck/${deckId}/card/${card._id}/learn`, {answer, card});
-            console.log(response.data);
+            //console.log(response.data);
 
             cards[idxCurCard] = response.data;
             this.setState({cards: cards});
@@ -89,12 +90,14 @@ export default class LearnCard extends React.Component{
 
 
     render(){
-        const {cards, idxCurCard} = this.state;
+        const {cards, idxCurCard, totalCards} = this.state;
         let card;
         if (cards.length > 0) card = cards[idxCurCard];
 
         return (
         <div className='LearnCard'>
+            <p className='cards-info'><b>Total cards:</b> {totalCards}</p>
+            <p className='cards-info'><b>Cads left:</b> {cards.length}</p>
             { cards.length > 0 ? this.renderCard(card) : this.renderFininished()}
         </div>
         );

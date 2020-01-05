@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css'
 import { Link } from 'react-router-dom';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdDeleteForever } from 'react-icons/md';
 import { TiCancel } from 'react-icons/ti';
 import {IoMdImages} from 'react-icons/io';
 import api from '../../services/api';
@@ -37,6 +37,17 @@ export default class EditCard extends React.Component {
         }
     };
 
+    handleDelete = async() => {
+        try{
+            const card = this.state.card;
+            await api.delete(`/deck/${card.deck}/card/${card._id}`);
+            this.props.history.goBack();
+        }catch(err){
+            console.log(err);
+            alert('Failed to delete the card');
+        }
+    }
+
     render(){
         let {card} = this.state;
 
@@ -48,6 +59,7 @@ export default class EditCard extends React.Component {
 
         return (
             <div className='EditCard'>
+                <button className='btn-delete' onClick={this.handleDelete}><MdDeleteForever color='#fff' size='25px'/>Delete</button>
                 <form> 
                     <label>Front</label><hr/>
                     <textarea id='area-front' name='front' rows='3' 
