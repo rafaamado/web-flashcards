@@ -12,12 +12,17 @@ export default class MyDecks extends React.Component{
         modalDisplay: 'none',
         inputDeckName: '',
         inputDeckDescription: '',
-        decks: []
+        decks: [],
+        languages: [],
+        frontLang: {},
+        backLang: {}
     }
 
     componentDidMount(){
         this.loadDecks();
+        this.loadLanguages();
     }
+
     loadDecks= async () =>{
         try{
             const response = await api.get('/deck/mydecks');
@@ -26,6 +31,16 @@ export default class MyDecks extends React.Component{
             console.log('Failed to retrieve user decks: ',err);
         }
     }
+
+    loadLanguages= async () => {
+        try{
+            const response = await api.get('/languages');
+            this.setState({languages: response.data});
+        }catch(err){
+            console.log('Failed to retrieve deck languages');
+        }
+    }
+
     
     handleAddBtn = () => {
         this.setState({modalDisplay: 'block'});
@@ -39,9 +54,14 @@ export default class MyDecks extends React.Component{
         // testing other way of get values from inputs
         const inDeckName = document.getElementById('inDeckName');
         const inDeckDesc = document.getElementById('inDeckDesc');
+
+        const {frontLang, backLang} = this.state;
+
         let deck = {
             name: inDeckName.value,
-            description: inDeckDesc.value
+            description: inDeckDesc.value,
+            frontLanguage: frontLang,
+            backLanguage: backLang
         };
 
         try{
@@ -79,6 +99,16 @@ export default class MyDecks extends React.Component{
 
     }
 
+    handleFrontLanguageChange = async (event) => {
+        const lang = this.state.languages.find(lang => lang.languageCode === event.target.value);
+        this.setState({frontLang: lang});
+    }
+
+    handleBackLanguageChange = async (event) => {
+        const lang = this.state.languages.find(lang => lang.languageCode === event.target.value);
+        this.setState({backLang: lang});
+    }
+
     render(){
         const addBtnStyle = {
             position: 'fixed',
@@ -107,7 +137,21 @@ export default class MyDecks extends React.Component{
                             <input id="inDeckName" type="text" placeholder="Ex: English Vocabulary" name="deckName" required/>
                             <label>Deck Description</label>
                             <input id="inDeckDesc" type="text" placeholder="New words learned in English class" name="description"/>
-                            
+
+                            <label>Front Language</label>
+                            <select name="frontLanguage" defaultValue="en-US" onChange={this.handleFrontLanguageChange}>
+                                {this.state.languages.map( (language) => (
+                                    <option key={language.languageCode} value={language.languageCode}>{language.language}</option>
+                                ))}
+                            </select>
+
+                            <label>Back Language</label>
+                            <select name="backLanguage" defaultValue="en-US" onChange={this.handleBackLanguageChange}>
+                                {this.state.languages.map( (language) => (
+                                    <option key={language.languageCode} value={language.languageCode} >{language.language}</option>
+                                ))}
+                            </select>
+                                                        
                             <div>
                                 <button className="cancel-btn" onClick={this.handleCloseModal}>Cancel</button>
                                 <button className="create-btn" onClick={this.handleCreateDeck}>Create</button>

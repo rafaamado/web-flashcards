@@ -164,11 +164,11 @@
 }
 
 /* New deck form */
-.modal-body input{
+.modal-body input, select{
   position: relative;
   display: block;
   width: 100%;
-  padding: 12px 20px;
+  padding: 8px 20px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   margin: 8px 0;

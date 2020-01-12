@@ -88,6 +88,14 @@ export default class LearnCard extends React.Component{
         this.setState({displayAnswer: 'block', userAnswer: userTxt});
     }
 
+    textToVoice= (text, lang) =>{
+        if (!lang)
+            lang = 'en-US';
+        const speech = new SpeechSynthesisUtterance(text);  
+        speech.lang = lang;
+        window.speechSynthesis.speak(speech);
+    }
+
 
     render(){
         const {cards, idxCurCard, totalCards} = this.state;
@@ -106,23 +114,25 @@ export default class LearnCard extends React.Component{
     renderCard(card){
         const frontCard = card.front.split('\n');
         const backCard = card.back.split('\n');
+        const frontLang = card.deck.frontLanguage.languageCode;
+        const backLang = card.deck.backLanguage.languageCode;
         const {displayAnswer} = this.state;
 
         return (
         <div className='card'>
             <div className='front-card'>
-                <p><AiFillSound className='sound-icon'/><strong>{frontCard[0]} </strong></p>
+                <p onClick={() => this.textToVoice(frontCard[0], frontLang)}><AiFillSound className='sound-icon'/><strong>{frontCard[0]} </strong></p>
                 {frontCard.map( (detail, index) => (
-                    index === 0 ? null : <p key={index}><AiFillSound className='sound-icon'/>{detail}</p>
+                    index === 0 ? null : <p key={index} onClick={() => this.textToVoice(detail, frontLang)}><AiFillSound className='sound-icon'/>{detail}</p>
                 ))}
                 <MdKeyboard size={40} onClick={this.handleUserInput} /> 
             </div>
             <div className='back-card' style={{display: displayAnswer}}>
                 <hr/>
                 {this.renderUserAnswer(card)}
-                <p><strong><AiFillSound className='sound-icon'/>{backCard[0]}</strong></p>
+                <p onClick={() => this.textToVoice(backCard[0], backLang)}><strong><AiFillSound className='sound-icon'/>{backCard[0]}</strong></p>
                 {backCard.map( (detail, index) => (
-                    index === 0 ? null : <p key={index}><AiFillSound className='sound-icon'/>{detail}</p>
+                    index === 0 ? null : <p key={index} onClick={() => this.textToVoice(detail, backLang)}><AiFillSound className='sound-icon'/>{detail}</p>
                 ))} 
             </div>
             <button className='btn-show' onClick={this.handleShowAnswer} 
